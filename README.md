@@ -41,3 +41,23 @@ are returned even when all keys have defaults. Error response bodies are not
 included in errors to avoid exposing secrets.
 
 Run checks with `go test -race ./...` and `go vet ./...`.
+
+## Live integration test
+
+Skipped by default. Set your token in `DOPPLER_SERVICE_TOKEN` through your shell
+or secret manager, then supply your project, config, and defaults:
+
+```sh
+DOPPLER_INTEGRATION=1 \
+DOPPLER_TEST_PROJECT='my-project' \
+DOPPLER_TEST_CONFIG='dev' \
+DOPPLER_TEST_DEFAULTS='{"DB_PASS":"","DB_USER":"postgres"}' \
+go test -run '^TestIntegrationListSecrets$' -count=1 -v
+```
+
+Use at least one empty default to verify that a value actually comes from Doppler.
+Optionally set `DOPPLER_TEST_EXPECTED` to a JSON object of expected key/value pairs
+for exact assertions. Secret values are never printed by the test. Do not commit
+credentials or expected secret values. `go test -short` skips the live test even
+when enabled. The test only reads secrets and has a 30-second timeout.
+
