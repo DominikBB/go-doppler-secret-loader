@@ -30,6 +30,7 @@ func TestIntegrationListSecrets(t *testing.T) {
 		if secrets[key] == "" {
 			t.Errorf("secret %q was not resolved", key)
 		}
+		t.Log(key, len(secrets[key]))
 	}
 	// Avoid logging secrets. Inspect them locally with a debugger if needed.
 }
